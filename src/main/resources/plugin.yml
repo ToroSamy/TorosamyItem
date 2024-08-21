@@ -1,0 +1,8 @@
+name: TorosamyItem
+version: '1.0-SNAPSHOT'
+main: net.torosamy.torosamyItem.TorosamyItem
+api-version: '1.21'
+authors: [ Torosamy,yweiyang ]
+website: https://www.torosamy.net
+depend:
+  - TorosamyCore
