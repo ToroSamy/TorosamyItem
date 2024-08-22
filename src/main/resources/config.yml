@@ -1,0 +1,10 @@
+default-item:
+  display-name: "&6展示名"
+  material: "STONE"
+  lore:
+    - "&6第1行lore"
+    - "&6第2行lore"
+  unbreakable: true
+  enchant-list:
+    - FIRE_ASPECT:2
+  update: true

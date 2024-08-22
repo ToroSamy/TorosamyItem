@@ -6,3 +6,4 @@ authors: [ Torosamy,yweiyang ]
 website: https://www.torosamy.net
 depend:
   - TorosamyCore
+  - PlaceholderAPI
