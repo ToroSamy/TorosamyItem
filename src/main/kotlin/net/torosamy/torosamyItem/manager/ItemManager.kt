@@ -42,17 +42,28 @@ class ItemManager() {
             for (itemYml in itemYmls.values) {
                 //遍历每个.yml里面的item配置
                 for (itemConfigString in itemYml.getKeys(false)) {
+
+                    val sonItemYml = itemYml.getConfigurationSection(itemConfigString)!!
                     //创建一个custom对象用来储存配置文件里的数据
-                    val customItem: CustomItem = CustomItem()
-                    customItem.displayName = itemYml.getString("$itemConfigString.displayName")
-                    customItem.material = itemYml.getString("$itemConfigString.material")
-                    customItem.lore = itemYml.getStringList("$itemConfigString.lore")
-                    customItem.unbreakable = itemYml.getBoolean("$itemConfigString.unbreakable")
-                    customItem.enchantList = itemYml.getStringList("$itemConfigString.enchantment")
-                    customItem.update = itemYml.getBoolean("$itemConfigString.update")
-                    customItem.itemFlagList = itemYml.getStringList("$itemConfigString.itemFlagList")
-                    customItem.clearAttribute = itemYml.getBoolean("$itemConfigString.clearAttribute")
-                    customItem.color = itemYml.getString("$itemConfigString.color")
+                    val customItem = CustomItem()
+                    customItem.displayName = sonItemYml.getString("displayName")
+                    customItem.material = sonItemYml.getString("material")
+                    customItem.lore = sonItemYml.getStringList("lore")
+                    customItem.unbreakable = sonItemYml.getBoolean("unbreakable")
+                    customItem.enchantList = sonItemYml.getStringList("enchantment")
+                    customItem.update = sonItemYml.getBoolean("update")
+                    customItem.itemFlagList = sonItemYml.getStringList("itemFlagList")
+                    customItem.clearAttribute = sonItemYml.getBoolean("clearAttribute")
+                    customItem.color = sonItemYml.getString("color")
+
+                    val tempYamlForHashCode = YamlConfiguration()
+                    sonItemYml.getValues(false).forEach(tempYamlForHashCode::set)
+                    val saveToString = tempYamlForHashCode.saveToString()
+                    //去掉最后一个字符后的字符串
+                    customItem.configString = saveToString.substring(0, saveToString.length - 1)
+                    customItem.hashCode = customItem.configString.hashCode()
+                    customItem.key = itemConfigString
+
                     items[itemConfigString] = customItem
                 }
             }

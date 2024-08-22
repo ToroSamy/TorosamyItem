@@ -1,2 +1,2 @@
 reload-message: "&b[服务器娘]&a插件 &eTorosamyItem &a重载成功喵~"
-package-overflow: "&b[服务器娘]&c玩家 %e%player_name% &c的背包已满 物品丢失"
+package-overflow: "&b[服务器娘]&c玩家 &e%player_name% &c的背包已满 物品丢失"

@@ -10,4 +10,8 @@ class CustomItem {
     var itemFlagList: List<String>? = null
     var clearAttribute: Boolean? = null
     var color: String? = null
+
+    var key:String? = null
+    var configString: String? = null
+    var hashCode: Int? = null
 }
