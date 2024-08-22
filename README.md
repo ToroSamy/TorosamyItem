@@ -18,6 +18,14 @@
 - - **Usage:** /tsi give item-name
   - **Description:** give a item to self
   - **Permission:** torosamyitem.give
+  <br>
+- - **Usage:** /tsi nbt
+  - **Description:** display the hashcode and fields of the items in hand
+  - **Permission:** torosamyitem.nbt
+    <br>
+- - **Usage:** /tsi nbt item-name
+  - **Description:** display the hashcode and fields of the corresponding item in the configuration file
+  - **Permission:** torosamyitem.nbt
 ## Config
 ### lang.yml
 ```yml
@@ -25,10 +33,10 @@ reload-message: "&b[服务器娘]&a插件 &eTorosamyItem &a重载成功喵~"
 package-overflow: "&b[服务器娘]&c玩家 %e%player_name% &c的背包已满 物品丢失"
 ```
 
-
+## Function
+- item manger
+- automatically updating items
 ## FuturePlans
-
-- auto update item
 - bind owner
 - consume item
 - trigger command
