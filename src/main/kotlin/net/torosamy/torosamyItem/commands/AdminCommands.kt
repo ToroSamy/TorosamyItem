@@ -16,7 +16,7 @@ import org.incendo.cloud.annotations.CommandDescription
 import org.incendo.cloud.annotations.Permission
 
 class AdminCommands {
-    @Command("tsi reload")
+    @Command("ti reload")
     @Permission("torosamyitem.reload")
     @CommandDescription("重载TorosamyItem配置文件")
     fun reloadConfig(sender: CommandSender) {
@@ -24,7 +24,7 @@ class AdminCommands {
         ItemManager.loadItem()
         sender.sendMessage(MessageUtil.text(ConfigUtil.getLangConfig().reloadMessage))
     }
-    @Command("tsi give <itemName> <player>")
+    @Command("ti give <itemName> <player>")
     @Permission("torosamyitem.give")
     @CommandDescription("给予玩家自定义物品")
     fun givePlayerItem(sender: CommandSender, @Argument("player") player: Player, @Argument("itemName") itemName: String) {
@@ -35,7 +35,7 @@ class AdminCommands {
         }
         ItemManager.items[itemName]?.let { ItemUtil.getItem(it,player) }?.let { player.inventory.addItem(it) }
     }
-    @Command("tsi give <itemName>", requiredSender = Player::class)
+    @Command("ti give <itemName>", requiredSender = Player::class)
     @Permission("torosamyitem.give")
     @CommandDescription("给予自己自定义物品")
     fun giveSelfItem(sender: CommandSender, @Argument("itemName") itemName: String) {
@@ -46,7 +46,7 @@ class AdminCommands {
         ItemManager.items[itemName]?.let { ItemUtil.getItem(it,player) }?.let { player.inventory.addItem(it) }
     }
 
-    @Command("tsi nbt <itemName>")
+    @Command("ti nbt <itemName>")
     @Permission("torosamyitem.nbt")
     @CommandDescription("显示CustomItem的NBT")
     fun showItemNBT(sender: CommandSender, @Argument("itemName") itemName: String) {
@@ -56,7 +56,7 @@ class AdminCommands {
         }
     }
 
-    @Command("tsi nbt", requiredSender = Player::class)
+    @Command("ti nbt", requiredSender = Player::class)
     @Permission("torosamyitem.nbt")
     @CommandDescription("显示手上物品的NBT")
     fun showHandNBT(sender: CommandSender) {
