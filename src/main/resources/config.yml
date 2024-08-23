@@ -1,10 +1,27 @@
-default-item:
-  display-name: "&6展示名"
-  material: "STONE"
-  lore:
-    - "&6第1行lore"
-    - "&6第2行lore"
-  unbreakable: true
-  enchant-list:
-    - FIRE_ASPECT:2
-  update: true
+# TorosamyItem生成的物品禁止进入哪些容器
+# 更多请见https://bukkit.windit.net/javadoc/org/bukkit/event/inventory/InventoryType.html
+black-container:
+  - ANVIL
+  - BEACON
+  - BLAST_FURNACE
+  - BREWING
+  - CARTOGRAPHY
+  - CHISELED_BOOKSHELF
+  - COMPOSTER
+  - CRAFTING
+  - CRAFTER
+  - DISPENSER
+  - DROPPER
+  - ENCHANTING
+  - FURNACE
+  - GRINDSTONE
+  - HOPPER
+  - JUKEBOX
+  - LECTERN
+  - LOOM
+  - MERCHANT
+  - SMITHING
+  - SMOKER
+  - STONECUTTER
+  - WORKBENCH
+# - BARREL # 木桶，有27个集装箱类型的槽。

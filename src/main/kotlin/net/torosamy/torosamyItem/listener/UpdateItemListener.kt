@@ -30,6 +30,16 @@ class UpdateItemListener : Listener {
         //如果HashCode没有发生变化
         if(newItem.hashCode == oldHashCode) return
 
-        event.player.inventory.setItem(event.newSlot,ItemUtil.getItem(newItem,event.player))
+        val item = ItemUtil.getItem(newItem, event.player)
+        val itemMeta = item.itemMeta
+        val type = item.type
+
+        oldItem.type = type
+        oldItem.itemMeta = itemMeta
+
+        NBT.modify(oldItem) { nbt ->
+            nbt.setInteger("HashCode", newItem.hashCode)
+            nbt.setString("TorosamyItem",newItem.key)
+        }
     }
 }

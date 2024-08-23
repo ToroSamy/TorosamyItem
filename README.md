@@ -22,7 +22,7 @@
 - - **Usage:** /tsi nbt
   - **Description:** display the hashcode and fields of the items in hand
   - **Permission:** torosamyitem.nbt
-    <br>
+  <br>
 - - **Usage:** /tsi nbt item-name
   - **Description:** display the hashcode and fields of the corresponding item in the configuration file
   - **Permission:** torosamyitem.nbt
@@ -37,7 +37,6 @@ package-overflow: "&b[服务器娘]&c玩家 &e%player_name% &c的背包已满 �
 - item manger
 - automatically updating items
 ## FuturePlans
-- bind owner
 - consume item
 - trigger command
 - can be placed in a container
