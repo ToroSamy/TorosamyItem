@@ -7,6 +7,7 @@ import net.torosamy.torosamyItem.TorosamyItem
 import net.torosamy.torosamyItem.manager.ItemManager
 import net.torosamy.torosamyItem.utils.ConfigUtil
 import net.torosamy.torosamyItem.utils.ItemUtil
+import org.bukkit.Material
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -62,11 +63,11 @@ class AdminCommands {
     fun showHandNBT(sender: CommandSender) {
         val player = sender as Player
         val itemInMainHand: ItemStack = player.inventory.itemInMainHand
-
+        if (itemInMainHand.type == Material.AIR) return
         NBT.get(itemInMainHand) { nbt->
             sender.sendMessage("HashCode: " + nbt.getInteger("HashCode"))
             sender.sendMessage("TorosamyItem: "+ nbt.getString("TorosamyItem"))
         }
-
     }
+
 }

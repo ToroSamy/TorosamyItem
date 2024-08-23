@@ -13,29 +13,6 @@ import org.bukkit.event.inventory.InventoryType
 
 class MoveItemListener : Listener {
     @EventHandler
-    fun onInventoryMoveItem(event: InventoryMoveItemEvent) {
-        println("Move Item")
-        val item = event.item
-        var itemKey: String = ""
-        //判断是否是一个TorosamyItem
-        NBT.get(item) { nbt -> itemKey = nbt.getString("TorosamyItem") }
-        println(itemKey)
-        //如果配置文件中没有找到相应的字段 说明不是一个TorosamyItem
-        if (itemKey == "" || !ItemManager.items.containsKey(itemKey)) {
-            println("${item.itemMeta.displayName}不是一个TorosamyItem")
-            return
-        }
-        //获取要移入容器类型
-        val inventoryType = event.destination.type
-        println(inventoryType)
-        ConfigUtil.getMainConfig().blackContainer.forEach { blackContainer ->
-            if(inventoryType == InventoryType.valueOf(blackContainer)) {
-                println(InventoryType.valueOf(blackContainer))
-                event.isCancelled = true
-            }
-        }
-    }
-    @EventHandler
     fun onClickCurrent(event: InventoryClickEvent) {
         //处理被点击的物品
         val item = event.currentItem ?: return
