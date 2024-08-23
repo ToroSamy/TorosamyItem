@@ -3,7 +3,10 @@ package net.torosamy.torosamyItem.listener
 import me.clip.placeholderapi.PlaceholderAPI
 import net.torosamy.torosamyCore.nbtapi.NBT
 import net.torosamy.torosamyCore.utils.MessageUtil
+import net.torosamy.torosamyItem.TorosamyItem
 import net.torosamy.torosamyItem.manager.ItemManager
+import net.torosamy.torosamyItem.scheduler.CooldownTask
+import net.torosamy.torosamyItem.utils.ConfigUtil
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -39,11 +42,22 @@ class CommandItemListener : Listener {
             if (command.leftClick && !isLeftClick) continue
             if (!command.leftClick && !isRightClick) continue
             if (command.sneak && !player.isSneaking) continue
-            if(command.permission != "" && !player.hasPermission(command.permission)) continue
+            if (command.permission != "" && !player.hasPermission(command.permission)) continue
 
-            //TODO 冷却
-            val commandString = MessageUtil.text(PlaceholderAPI.setPlaceholders(player,command.command))
-            if(command.isConsole) Bukkit.dispatchCommand(Bukkit.getConsoleSender(), commandString)
+            if (command.cooldown > 0) {
+                val cooldown = command.playerCooldown[player]?.cooldown
+                if(cooldown != null && cooldown > 0) {
+                    val message = MessageUtil.text(ConfigUtil.getLangConfig().commandCooldown.replace("{s}", cooldown.toString()).replace("{key}", command.key))
+                    player.sendMessage(message)
+                    return
+                }else {
+                    command.playerCooldown[player] = CooldownTask(command.cooldown)
+                    command.playerCooldown[player]?.runTaskTimer(TorosamyItem.plugin,0L,20L)
+                }
+            }
+            
+            val commandString = MessageUtil.text(PlaceholderAPI.setPlaceholders(player, command.command))
+            if (command.isConsole) Bukkit.dispatchCommand(Bukkit.getConsoleSender(), commandString)
             else {
                 player.isOp = true
                 Bukkit.dispatchCommand(player, commandString)
