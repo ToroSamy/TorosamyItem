@@ -16,6 +16,10 @@
   - **Description:** reload this plugin
   - **Permission:** torosamyitem.reload
   <br>
+- - **Usage:** /ti give item-name player-name amount
+  - **Description:** Provide a specified quantity of items to players
+  - **Permission:** torosamyitem.give
+  <br>
 - - **Usage:** /ti give item-name player-name
   - **Description:** give a item to player
   - **Permission:** torosamyitem.give
@@ -36,6 +40,7 @@
 ```yml
 reload-message: "&b[服务器娘]&a插件 &eTorosamyItem &a重载成功喵~"
 package-overflow: "&b[服务器娘]&c玩家 &e%player_name% &c的背包已满 物品丢失"
+command-cooldown: "&b[服务器娘]&c错误 您必须还要 &e{s} &c秒才能使用 &e{key}"
 ```
 ### config.yml
 [more please click here](https://bukkit.windit.net/javadoc/org/bukkit/event/inventory/InventoryType.html)
@@ -46,7 +51,44 @@ black-container:
   - BLAST_FURNACE
   #and more
 ```
-
+### template custom-item
+```yml
+CustomName:
+  displayName: "&6NAME"
+  material: STONE
+  lore:
+    - '&e text1'
+    - '&e text2'
+  unbreakable: true
+  enchantment:
+    - DURABILITY:1
+  update: true
+  itemFlagList:
+  - "HIDE_ATTRIBUTES"
+  - "HIDE_UNBREAKABLE"
+  - "HIDE_ENCHANTS"
+  - "HIDE_POTION_EFFECTS"
+  clearAttribute: false
+  commands:
+    custom1:
+      cooldown: 0
+      permission: ""
+      console: true
+      command: 'say hello'
+      trigger:
+        leftClick: false
+        sneak: false
+    custom2:
+      cooldown: 0
+      permission: ""
+      console: true
+      command: 'say hello %player_name%'
+      trigger:
+        leftClick: true
+        sneak: false
+  leftConsume: false
+  rightConsume: false
+```
 
 ## Contact Author
 - qq: 1364596766
@@ -54,4 +96,4 @@ black-container:
 
 ## License
 
-[MIT](./LICENSE)
+[GPL-3.0 license](./LICENSE)
