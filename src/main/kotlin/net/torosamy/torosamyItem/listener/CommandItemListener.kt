@@ -55,7 +55,7 @@ class CommandItemListener : Listener {
                     command.playerCooldown[player]?.runTaskTimer(TorosamyItem.plugin,0L,20L)
                 }
             }
-            
+
             val commandString = MessageUtil.text(PlaceholderAPI.setPlaceholders(player, command.command))
             if (command.isConsole) Bukkit.dispatchCommand(Bukkit.getConsoleSender(), commandString)
             else {

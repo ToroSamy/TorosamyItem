@@ -36,6 +36,23 @@ class AdminCommands {
         }
         ItemManager.items[itemName]?.let { ItemUtil.getItem(it,player) }?.let { player.inventory.addItem(it) }
     }
+
+    @Command("ti give <itemName> <player> <amount>")
+    @Permission("torosamyitem.give")
+    @CommandDescription("给予指定数量的自定义物品")
+    fun giveMoreItem(sender: CommandSender, @Argument("player") player: Player, @Argument("itemName") itemName: String, @Argument("amount") amount: Int) {
+        if (player.inventory.firstEmpty() == -1) {
+            player.sendMessage(MessageUtil.text(PlaceholderAPI.setPlaceholders(player, ConfigUtil.getLangConfig().packageOverflow)))
+            if(sender is Player) sender.sendMessage(MessageUtil.text(PlaceholderAPI.setPlaceholders(player, ConfigUtil.getLangConfig().packageOverflow)))
+            TorosamyItem.plugin.server.consoleSender.sendMessage(MessageUtil.text(PlaceholderAPI.setPlaceholders(player, ConfigUtil.getLangConfig().packageOverflow)))
+        }
+        ItemManager.items[itemName]?.let { val item = ItemUtil.getItem(it, player)
+            item.amount = amount
+            player.inventory.addItem(item)
+        }
+    }
+
+
     @Command("ti give <itemName>", requiredSender = Player::class)
     @Permission("torosamyitem.give")
     @CommandDescription("给予自己自定义物品")

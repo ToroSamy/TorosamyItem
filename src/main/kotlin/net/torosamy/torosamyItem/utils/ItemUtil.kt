@@ -17,6 +17,7 @@ import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.LeatherArmorMeta
+import java.util.*
 
 
 class ItemUtil {
@@ -59,7 +60,7 @@ class ItemUtil {
 
 
                 itemMeta.addAttributeModifier(attribute, AttributeModifier(
-                    NamespacedKey(TorosamyItem.plugin,TorosamyItem.plugin.name),
+                    NamespacedKey(TorosamyItem.plugin, TorosamyItem.plugin.name),
                     0.0,
                     AttributeModifier.Operation.entries[0],
                     EquipmentSlotGroup.ANY
