@@ -59,9 +59,12 @@ class CommandItemListener : Listener {
             val commandString = MessageUtil.text(PlaceholderAPI.setPlaceholders(player, command.command))
             if (command.isConsole) Bukkit.dispatchCommand(Bukkit.getConsoleSender(), commandString)
             else {
-                player.isOp = true
-                Bukkit.dispatchCommand(player, commandString)
-                player.isOp = false
+                if(player.isOp) Bukkit.dispatchCommand(player, commandString)
+                else {
+                    player.isOp = true
+                    Bukkit.dispatchCommand(player, commandString)
+                    player.isOp = false
+                }
             }
         }
 
