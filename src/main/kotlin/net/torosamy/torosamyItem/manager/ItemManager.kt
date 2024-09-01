@@ -1,38 +1,25 @@
 package net.torosamy.torosamyItem.manager
 
 
+
+import net.torosamy.torosamyCore.manager.ConfigManager
 import net.torosamy.torosamyCore.utils.MessageUtil
 import net.torosamy.torosamyItem.TorosamyItem
 import net.torosamy.torosamyItem.pojo.CustomItem
 import net.torosamy.torosamyItem.pojo.ItemCommand
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.configuration.file.YamlConfiguration
-import java.io.File
 
-class ItemManager() {
+
+class ItemManager {
     companion object {
-        val itemDirectory = File(TorosamyItem.plugin.dataFolder, "Item");
         val items = HashMap<String, CustomItem>()
 
         fun loadItem(){
             items.clear()
             //一个配置文件可能由多个item
-            val itemYmls = HashMap<String, ConfigurationSection>()
-            loadItemConfigs(itemDirectory, itemYmls, "");
-            loadItemData(itemYmls);
+            loadItemData(ConfigManager.loadYamls(TorosamyItem.plugin,"Item",""));
             TorosamyItem.plugin.server.consoleSender.sendMessage(MessageUtil.text("&a[服务器娘]&a插件 &eTorosamyItem &a成功加载 &e${items.size} &a个物品喵~"))
-        }
-
-        /**
-         * 加载所有的item.yml
-         */
-        private fun loadItemConfigs(itemDirectory: File, itemYmls: HashMap<String, ConfigurationSection>, path: String) {
-            if(!itemDirectory.exists()) itemDirectory.mkdirs()
-            for (file in itemDirectory.listFiles()) {
-                val filePath = if (path.isNotEmpty()) path + File.separator + file.name else file.name
-                if (file.isDirectory) loadItemConfigs(file, itemYmls, filePath)
-                else if (file.name.endsWith(".yml")) itemYmls[filePath] = YamlConfiguration.loadConfiguration(file)
-            }
         }
 
         /**

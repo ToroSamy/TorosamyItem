@@ -23,16 +23,16 @@ class AdminCommands {
     fun reloadConfig(sender: CommandSender) {
         ConfigUtil.reloadConfig()
         ItemManager.loadItem()
-        sender.sendMessage(MessageUtil.text(ConfigUtil.getLangConfig().reloadMessage))
+        sender.sendMessage(MessageUtil.text(ConfigUtil.langConfig.reloadMessage))
     }
     @Command("ti give <itemName> <player>")
     @Permission("torosamyitem.give")
     @CommandDescription("给予玩家自定义物品")
     fun givePlayerItem(sender: CommandSender, @Argument("player") player: Player, @Argument("itemName") itemName: String) {
         if (player.inventory.firstEmpty() == -1) {
-            player.sendMessage(MessageUtil.text(PlaceholderAPI.setPlaceholders(player, ConfigUtil.getLangConfig().packageOverflow)))
-            if(sender is Player) sender.sendMessage(MessageUtil.text(PlaceholderAPI.setPlaceholders(player, ConfigUtil.getLangConfig().packageOverflow)))
-            TorosamyItem.plugin.server.consoleSender.sendMessage(MessageUtil.text(PlaceholderAPI.setPlaceholders(player, ConfigUtil.getLangConfig().packageOverflow)))
+            player.sendMessage(MessageUtil.text(PlaceholderAPI.setPlaceholders(player, ConfigUtil.langConfig.packageOverflow)))
+            if(sender is Player) sender.sendMessage(MessageUtil.text(PlaceholderAPI.setPlaceholders(player, ConfigUtil.langConfig.packageOverflow)))
+            TorosamyItem.plugin.server.consoleSender.sendMessage(MessageUtil.text(PlaceholderAPI.setPlaceholders(player, ConfigUtil.langConfig.packageOverflow)))
         }
         ItemManager.items[itemName]?.let { ItemUtil.getItem(it,player) }?.let { player.inventory.addItem(it) }
     }
@@ -42,9 +42,9 @@ class AdminCommands {
     @CommandDescription("给予指定数量的自定义物品")
     fun giveMoreItem(sender: CommandSender, @Argument("player") player: Player, @Argument("itemName") itemName: String, @Argument("amount") amount: Int) {
         if (player.inventory.firstEmpty() == -1) {
-            player.sendMessage(MessageUtil.text(PlaceholderAPI.setPlaceholders(player, ConfigUtil.getLangConfig().packageOverflow)))
-            if(sender is Player) sender.sendMessage(MessageUtil.text(PlaceholderAPI.setPlaceholders(player, ConfigUtil.getLangConfig().packageOverflow)))
-            TorosamyItem.plugin.server.consoleSender.sendMessage(MessageUtil.text(PlaceholderAPI.setPlaceholders(player, ConfigUtil.getLangConfig().packageOverflow)))
+            player.sendMessage(MessageUtil.text(PlaceholderAPI.setPlaceholders(player, ConfigUtil.langConfig.packageOverflow)))
+            if(sender is Player) sender.sendMessage(MessageUtil.text(PlaceholderAPI.setPlaceholders(player, ConfigUtil.langConfig.packageOverflow)))
+            TorosamyItem.plugin.server.consoleSender.sendMessage(MessageUtil.text(PlaceholderAPI.setPlaceholders(player, ConfigUtil.langConfig.packageOverflow)))
         }
         ItemManager.items[itemName]?.let { val item = ItemUtil.getItem(it, player)
             item.amount = amount
@@ -59,7 +59,7 @@ class AdminCommands {
     fun giveSelfItem(sender: CommandSender, @Argument("itemName") itemName: String) {
         val player = sender as Player
         if (player.inventory.firstEmpty() == -1) {
-            player.sendMessage(MessageUtil.text(PlaceholderAPI.setPlaceholders(player, ConfigUtil.getLangConfig().packageOverflow)))
+            player.sendMessage(MessageUtil.text(PlaceholderAPI.setPlaceholders(player, ConfigUtil.langConfig.packageOverflow)))
         }
         ItemManager.items[itemName]?.let { ItemUtil.getItem(it,player) }?.let { player.inventory.addItem(it) }
     }

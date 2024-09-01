@@ -1,29 +1,25 @@
 package net.torosamy.torosamyItem.utils
 
 import net.torosamy.torosamyCore.manager.ConfigManager
-import net.torosamy.torosamyItem.TorosamyItem.Companion.plugin
+import net.torosamy.torosamyItem.TorosamyItem
 import net.torosamy.torosamyItem.config.LangConfig
 import net.torosamy.torosamyItem.config.MainConfig
 
 class ConfigUtil {
     companion object {
-        private var mainConfig: MainConfig = MainConfig()
-        private var mainConfigManager: ConfigManager = ConfigManager(mainConfig)
-        private var langConfig: LangConfig = LangConfig()
-        private var langConfigManager: ConfigManager = ConfigManager(langConfig)
-
-        fun getMainConfig(): MainConfig {return mainConfig}
-        fun getLangConfig(): LangConfig {return langConfig}
+        var mainConfig: MainConfig = MainConfig()
+        var langConfig: LangConfig = LangConfig()
+        private var mainConfigManager: ConfigManager = ConfigManager(mainConfig,TorosamyItem.plugin,"","config.yml")
+        private var langConfigManager: ConfigManager = ConfigManager(langConfig,TorosamyItem.plugin,"","lang.yml")
 
         fun reloadConfig() {
-            mainConfigManager.load(plugin, "config.yml")
-            langConfigManager.load(plugin, "lang.yml")
-
+            mainConfigManager.load()
+            langConfigManager.load()
 
         }
         fun saveConfig() {
-            mainConfigManager.saveFile()
-            langConfigManager.saveFile()
+            mainConfigManager.save()
+            langConfigManager.save()
         }
     }
 }

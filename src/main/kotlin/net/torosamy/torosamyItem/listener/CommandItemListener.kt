@@ -34,7 +34,7 @@ class CommandItemListener : Listener {
         //如果配置文件中没有找到相应的字段 说明不是一个TorosamyItem
         if (itemKey == "" || !ItemManager.items.containsKey(itemKey)) return
         //如果是一个TorosamyItem则取消可以交互
-        event.isCancelled = true
+        if(isRightClick) event.isCancelled = true
         //获取内存当中的物品
         val customItem = ItemManager.items[itemKey]!!
 
@@ -47,7 +47,7 @@ class CommandItemListener : Listener {
             if (command.cooldown > 0) {
                 val cooldown = command.playerCooldown[player]?.cooldown
                 if(cooldown != null && cooldown > 0) {
-                    val message = MessageUtil.text(ConfigUtil.getLangConfig().commandCooldown.replace("{s}", cooldown.toString()).replace("{key}", command.key))
+                    val message = MessageUtil.text(ConfigUtil.langConfig.commandCooldown.replace("{s}", cooldown.toString()).replace("{key}", command.key))
                     player.sendMessage(message)
                     return
                 }else {

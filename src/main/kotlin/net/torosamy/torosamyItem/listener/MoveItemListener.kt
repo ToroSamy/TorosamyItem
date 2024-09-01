@@ -7,7 +7,6 @@ import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.event.inventory.InventoryMoveItemEvent
 import org.bukkit.event.inventory.InventoryPickupItemEvent
 import org.bukkit.event.inventory.InventoryType
 
@@ -23,7 +22,7 @@ class MoveItemListener : Listener {
         //如果配置文件中没有找到相应的字段 说明不是一个TorosamyItem
         if (itemKey == "" || !ItemManager.items.containsKey(itemKey)) { return }
         val inventoryType = event.inventory.type
-        for (blackContainer in ConfigUtil.getMainConfig().blackContainer) {
+        for (blackContainer in ConfigUtil.mainConfig.blackContainer) {
             if(blackContainer != "CRAFTING" && inventoryType == InventoryType.valueOf(blackContainer)) { event.isCancelled = true }
         }
     }
@@ -38,7 +37,7 @@ class MoveItemListener : Listener {
         NBT.get(item) { nbt -> itemKey = nbt.getString("TorosamyItem") }
         //如果配置文件中没有找到相应的字段 说明不是一个TorosamyItem
         if (itemKey == "" || !ItemManager.items.containsKey(itemKey)) { return }
-        for (blackContainer in ConfigUtil.getMainConfig().blackContainer) {
+        for (blackContainer in ConfigUtil.mainConfig.blackContainer) {
             if(blackContainer == "CRAFTING" && event.slotType == InventoryType.SlotType.CRAFTING) { event.isCancelled = true }
         }
     }
@@ -51,7 +50,7 @@ class MoveItemListener : Listener {
         NBT.get(itemStack) { nbt -> itemKey = nbt.getString("TorosamyItem") }
         //如果配置文件中没有找到相应的字段 说明不是一个TorosamyItem
         if (itemKey == "" || !ItemManager.items.containsKey(itemKey)) { return }
-        for (blackContainer in ConfigUtil.getMainConfig().blackContainer) {
+        for (blackContainer in ConfigUtil.mainConfig.blackContainer) {
             if(blackContainer == "HOPPER") { event.isCancelled = true }
         }
     }
