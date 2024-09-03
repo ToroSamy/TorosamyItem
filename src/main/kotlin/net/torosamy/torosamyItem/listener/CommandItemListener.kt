@@ -1,7 +1,6 @@
 package net.torosamy.torosamyItem.listener
 
 import me.clip.placeholderapi.PlaceholderAPI
-import net.torosamy.torosamyCore.nbtapi.NBT
 import net.torosamy.torosamyCore.utils.MessageUtil
 import net.torosamy.torosamyItem.TorosamyItem
 import net.torosamy.torosamyItem.manager.ItemManager
@@ -14,7 +13,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
-
+import de.tr7zw.changeme.nbtapi.NBT
 class CommandItemListener : Listener {
     @EventHandler
     fun onPlayerAction(event: PlayerInteractEvent) {

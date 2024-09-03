@@ -7,6 +7,7 @@ import net.torosamy.torosamyCore.utils.MessageUtil
 import net.torosamy.torosamyItem.TorosamyItem
 import net.torosamy.torosamyItem.pojo.CustomItem
 import net.torosamy.torosamyItem.pojo.ItemCommand
+import org.bukkit.Bukkit
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.configuration.file.YamlConfiguration
 
@@ -19,7 +20,7 @@ class ItemManager {
             items.clear()
             //一个配置文件可能由多个item
             loadItemData(ConfigManager.loadYamls(TorosamyItem.plugin,"Item",""));
-            TorosamyItem.plugin.server.consoleSender.sendMessage(MessageUtil.text("&a[服务器娘]&a插件 &eTorosamyItem &a成功加载 &e${items.size} &a个物品喵~"))
+            Bukkit.getConsoleSender().sendMessage(MessageUtil.text("&a[服务器娘]&a插件 &eTorosamyItem &a成功加载 &e${items.size} &a个物品喵~"))
         }
 
         /**

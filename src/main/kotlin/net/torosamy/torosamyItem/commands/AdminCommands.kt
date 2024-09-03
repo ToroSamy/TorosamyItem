@@ -1,7 +1,7 @@
 package net.torosamy.torosamyItem.commands
 
+import de.tr7zw.changeme.nbtapi.NBT
 import me.clip.placeholderapi.PlaceholderAPI
-import net.torosamy.torosamyCore.nbtapi.NBT
 import net.torosamy.torosamyCore.utils.MessageUtil
 import net.torosamy.torosamyItem.TorosamyItem
 import net.torosamy.torosamyItem.manager.ItemManager

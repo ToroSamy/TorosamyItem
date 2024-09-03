@@ -1,6 +1,6 @@
 package net.torosamy.torosamyItem.listener
 
-import net.torosamy.torosamyCore.nbtapi.NBT
+import de.tr7zw.changeme.nbtapi.NBT
 import net.torosamy.torosamyItem.manager.ItemManager
 import net.torosamy.torosamyItem.utils.ConfigUtil
 import org.bukkit.Material
