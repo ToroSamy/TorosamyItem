@@ -1,23 +1,18 @@
 package net.torosamy.torosamyItem.utils
 
 
+import com.google.common.collect.ImmutableMultimap
 import me.clip.placeholderapi.PlaceholderAPI
 import de.tr7zw.changeme.nbtapi.NBT
 import net.torosamy.torosamyCore.utils.MessageUtil
-import net.torosamy.torosamyItem.TorosamyItem
 import net.torosamy.torosamyItem.pojo.CustomItem
 import org.bukkit.Color
 import org.bukkit.Material
-import org.bukkit.NamespacedKey
-import org.bukkit.attribute.Attribute
-import org.bukkit.attribute.AttributeModifier
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
-import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.LeatherArmorMeta
-import java.util.*
 
 
 class ItemUtil {
@@ -42,29 +37,18 @@ class ItemUtil {
                     if(enchantmentType != null && enchantmentLevel != 0) {itemMeta.addEnchant(enchantmentType, enchantmentLevel, true) }
                 }
             }
-
+            //TODO 隐藏属性
             if (customItem.itemFlagList != null) {
                 for (itemFlagStr in customItem.itemFlagList!!) {
-                    for (itemFlag in ItemFlag.entries) {
-                        if (itemFlagStr == itemFlag.name) {
-                            itemMeta.addItemFlags(itemFlag)
-                            break
-                        }
-                    }
+                    val itemFlag = ItemFlag.valueOf(itemFlagStr)
+                    itemMeta.addItemFlags(itemFlag)
+                    if(itemFlag == ItemFlag.HIDE_ATTRIBUTES) itemMeta.attributeModifiers = ImmutableMultimap.of()
                 }
             }
 
+
             if (customItem.clearAttribute != null && customItem.clearAttribute!!) {
-                itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
-                val attribute = Attribute.GENERIC_ATTACK_DAMAGE
-
-
-                itemMeta.addAttributeModifier(attribute, AttributeModifier(
-                    NamespacedKey(TorosamyItem.plugin, TorosamyItem.plugin.name),
-                    0.0,
-                    AttributeModifier.Operation.entries[0],
-                    EquipmentSlotGroup.ANY
-                ))
+                itemMeta.attributeModifiers = ImmutableMultimap.of()
             }
 
             if(customItem.color != null && itemMeta is LeatherArmorMeta) {
