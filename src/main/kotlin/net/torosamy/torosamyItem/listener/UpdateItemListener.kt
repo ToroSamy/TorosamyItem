@@ -1,6 +1,7 @@
 package net.torosamy.torosamyItem.listener
 
-import de.tr7zw.changeme.nbtapi.NBT
+
+import net.torosamy.torosamyCore.utils.NbtUtil
 import net.torosamy.torosamyItem.manager.ItemManager
 import net.torosamy.torosamyItem.utils.ItemUtil
 import org.bukkit.event.EventHandler
@@ -14,21 +15,17 @@ class UpdateItemListener : Listener {
     fun onPlayerItemHeld(event: PlayerItemHeldEvent) {
         val oldItem: ItemStack = event.player.inventory.getItem(event.newSlot) ?: return
 
-        var itemKey: String = ""
-        var oldHashCode: Int = 0
-        //获取物品对应的字段和HashCode 的同时可以判断是否是一个TorosamyItem
-        NBT.get(oldItem) { nbt ->
-            itemKey = nbt.getString("TorosamyItem")
-            oldHashCode = nbt.getInteger("HashCode")
+        //判断物品是否是TorosamyItem
+        if (!ItemUtil.isTorosamyItem(oldItem)) {
+            return
         }
-        //如果配置文件中没有找到相应的字段 说明不是一个TorosamyItem
-        if (itemKey == "" || !ItemManager.items.containsKey(itemKey)) return
+
         //获取新的物品
-        val newItem = ItemManager.items[itemKey]!!
+        val newItem = ItemManager.items[ItemUtil.getConfigName(oldItem)]!!
         //如果未设置或者 设置为禁止
         if(newItem.update == null || newItem.update == false) return
         //如果HashCode没有发生变化
-        if(newItem.hashCode == oldHashCode) return
+        if(newItem.hashCode == ItemUtil.getHashCode(oldItem)) return
 
         val item = ItemUtil.getItem(newItem, event.player)
         val itemMeta = item.itemMeta
@@ -37,9 +34,8 @@ class UpdateItemListener : Listener {
         oldItem.type = type
         oldItem.itemMeta = itemMeta
 
-        NBT.modify(oldItem) { nbt ->
-            nbt.setInteger("HashCode", newItem.hashCode)
-            nbt.setString("TorosamyItem",newItem.key)
-        }
+        NbtUtil.setString(oldItem, ItemUtil.TOROSAMY_ITEM_KEY, newItem.key)
+        NbtUtil.setInteger(oldItem, ItemUtil.TOROSAMY_HASH_CODE_KEY, newItem.hashCode)
+
     }
 }

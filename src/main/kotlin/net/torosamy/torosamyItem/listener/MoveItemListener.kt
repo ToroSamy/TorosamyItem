@@ -1,8 +1,8 @@
 package net.torosamy.torosamyItem.listener
 
-import de.tr7zw.changeme.nbtapi.NBT
 import net.torosamy.torosamyItem.manager.ItemManager
 import net.torosamy.torosamyItem.utils.ConfigUtil
+import net.torosamy.torosamyItem.utils.ItemUtil
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -15,12 +15,13 @@ class MoveItemListener : Listener {
     fun onClickCurrent(event: InventoryClickEvent) {
         //处理被点击的物品
         val item = event.currentItem ?: return
-        if(item.type == Material.AIR) return
-        var itemKey: String = ""
-        //判断是否是一个TorosamyItem
-        NBT.get(item) { nbt -> itemKey = nbt.getString("TorosamyItem") }
-        //如果配置文件中没有找到相应的字段 说明不是一个TorosamyItem
-        if (itemKey == "" || !ItemManager.items.containsKey(itemKey)) { return }
+        if(item.type == Material.AIR) {
+            return
+        }
+        //判断物品是否是TorosamyItem
+        if (!ItemUtil.isTorosamyItem(item)) {
+            return
+        }
         val inventoryType = event.inventory.type
         for (blackContainer in ConfigUtil.mainConfig.blackContainer) {
             if(blackContainer != "CRAFTING" && inventoryType == InventoryType.valueOf(blackContainer)) { event.isCancelled = true }
@@ -31,12 +32,11 @@ class MoveItemListener : Listener {
     fun onClick(event: InventoryClickEvent) {
         //处理被光标拿起的物品
         val item = event.cursor
-        if(item.type == Material.AIR) return
-        var itemKey: String = ""
-        //判断是否是一个TorosamyItem
-        NBT.get(item) { nbt -> itemKey = nbt.getString("TorosamyItem") }
-        //如果配置文件中没有找到相应的字段 说明不是一个TorosamyItem
-        if (itemKey == "" || !ItemManager.items.containsKey(itemKey)) { return }
+        if(item?.type == Material.AIR) return
+        //判断物品是否是TorosamyItem
+        if (!ItemUtil.isTorosamyItem(item)) {
+            return
+        }
         for (blackContainer in ConfigUtil.mainConfig.blackContainer) {
             if(blackContainer == "CRAFTING" && event.slotType == InventoryType.SlotType.CRAFTING) { event.isCancelled = true }
         }
@@ -45,11 +45,9 @@ class MoveItemListener : Listener {
     @EventHandler
     fun onHopperGetItem(event: InventoryPickupItemEvent) {
         val itemStack = event.item.itemStack
-        var itemKey: String = ""
-        //判断是否是一个TorosamyItem
-        NBT.get(itemStack) { nbt -> itemKey = nbt.getString("TorosamyItem") }
-        //如果配置文件中没有找到相应的字段 说明不是一个TorosamyItem
-        if (itemKey == "" || !ItemManager.items.containsKey(itemKey)) { return }
+        if (!ItemUtil.isTorosamyItem(itemStack)) {
+            return
+        }
         for (blackContainer in ConfigUtil.mainConfig.blackContainer) {
             if(blackContainer == "HOPPER") { event.isCancelled = true }
         }

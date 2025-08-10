@@ -1,20 +1,27 @@
 package net.torosamy.torosamyItem.commands
 
-import de.tr7zw.changeme.nbtapi.NBT
 import me.clip.placeholderapi.PlaceholderAPI
+import net.minecraft.core.component.DataComponents
+import net.minecraft.nbt.NBTBase
+import net.minecraft.nbt.NBTTagCompound
+import net.minecraft.nbt.NBTTagString
+import net.minecraft.world.item.component.CustomData
 import net.torosamy.torosamyCore.utils.MessageUtil
+import net.torosamy.torosamyCore.utils.NbtUtil
 import net.torosamy.torosamyItem.TorosamyItem
 import net.torosamy.torosamyItem.manager.ItemManager
 import net.torosamy.torosamyItem.utils.ConfigUtil
 import net.torosamy.torosamyItem.utils.ItemUtil
 import org.bukkit.Material
 import org.bukkit.command.CommandSender
+import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.incendo.cloud.annotations.Argument
 import org.incendo.cloud.annotations.Command
 import org.incendo.cloud.annotations.CommandDescription
 import org.incendo.cloud.annotations.Permission
+
 
 class AdminCommands {
     @Command("ti reload")
@@ -81,10 +88,10 @@ class AdminCommands {
         val player = sender as Player
         val itemInMainHand: ItemStack = player.inventory.itemInMainHand
         if (itemInMainHand.type == Material.AIR) return
-        NBT.get(itemInMainHand) { nbt->
-            sender.sendMessage("HashCode: " + nbt.getInteger("HashCode"))
-            sender.sendMessage("TorosamyItem: "+ nbt.getString("TorosamyItem"))
-        }
+
+        sender.sendMessage("HashCode: " + NbtUtil.getInteger(itemInMainHand, "HashCode"))
+        sender.sendMessage("TorosamyItem: "+ NbtUtil.getString(itemInMainHand, "TorosamyItem"))
+
     }
 
 }

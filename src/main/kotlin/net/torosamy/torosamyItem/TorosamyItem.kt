@@ -6,11 +6,13 @@ import net.torosamy.torosamyItem.utils.CommandUtil
 import net.torosamy.torosamyItem.utils.ConfigUtil
 import net.torosamy.torosamyItem.utils.ListenerUtil
 import org.bukkit.Bukkit
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftPlayer
 import org.bukkit.plugin.java.JavaPlugin
 
 class TorosamyItem : JavaPlugin() {
     companion object{lateinit var plugin: TorosamyItem}
     override fun onEnable() {
+
         plugin = this
         CommandUtil.registerCommand()
         ConfigUtil.reloadConfig()

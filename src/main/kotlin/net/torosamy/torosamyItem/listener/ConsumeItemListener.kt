@@ -1,7 +1,8 @@
 package net.torosamy.torosamyItem.listener
 
-import de.tr7zw.changeme.nbtapi.NBT
+
 import net.torosamy.torosamyItem.manager.ItemManager
+import net.torosamy.torosamyItem.utils.ItemUtil
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -26,12 +27,12 @@ class ConsumeItemListener : Listener {
         //若手上没有物品则返回
         val item = event.item ?: return
         //判断物品是否是TorosamyItem
-        var itemKey: String = ""
-        NBT.get(item) { nbt -> itemKey = nbt.getString("TorosamyItem") }
-        //如果配置文件中没有找到相应的字段 说明不是一个TorosamyItem
-        if (itemKey == "" || !ItemManager.items.containsKey(itemKey)) return
+        if (!ItemUtil.isTorosamyItem(item)) {
+            return
+        }
+
         //获取内存当中的物品
-        val customItem = ItemManager.items[itemKey]!!
+        val customItem = ItemManager.items[ItemUtil.getConfigName(item)]!!
 
         if (customItem.leftConsume && isLeftClick) {
             oldItemStack.amount--

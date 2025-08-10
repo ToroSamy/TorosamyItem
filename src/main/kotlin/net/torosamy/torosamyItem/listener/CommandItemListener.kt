@@ -6,6 +6,7 @@ import net.torosamy.torosamyItem.TorosamyItem
 import net.torosamy.torosamyItem.manager.ItemManager
 import net.torosamy.torosamyItem.scheduler.CooldownTask
 import net.torosamy.torosamyItem.utils.ConfigUtil
+import net.torosamy.torosamyItem.utils.ItemUtil
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -13,7 +14,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
-import de.tr7zw.changeme.nbtapi.NBT
+
 class CommandItemListener : Listener {
     @EventHandler
     fun onPlayerAction(event: PlayerInteractEvent) {
@@ -28,14 +29,13 @@ class CommandItemListener : Listener {
         //若手上没有物品则返回
         val item = event.item ?: return
         //判断物品是否是TorosamyItem
-        var itemKey: String = ""
-        NBT.get(item) { nbt -> itemKey = nbt.getString("TorosamyItem") }
-        //如果配置文件中没有找到相应的字段 说明不是一个TorosamyItem
-        if (itemKey == "" || !ItemManager.items.containsKey(itemKey)) return
+        if (!ItemUtil.isTorosamyItem(item)) {
+            return
+        }
         //如果是一个TorosamyItem则取消可以交互
         if(isRightClick) event.isCancelled = true
         //获取内存当中的物品
-        val customItem = ItemManager.items[itemKey]!!
+        val customItem = ItemManager.items[ItemUtil.getConfigName(item)]!!
 
         for (command in customItem.commands.values) {
             if (command.leftClick && !isLeftClick) continue
