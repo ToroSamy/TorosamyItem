@@ -1,10 +1,7 @@
 package net.torosamy.torosamyItem.utils
 
 import net.torosamy.torosamyItem.TorosamyItem
-import net.torosamy.torosamyItem.listener.CommandItemListener
-import net.torosamy.torosamyItem.listener.ConsumeItemListener
-import net.torosamy.torosamyItem.listener.MoveItemListener
-import net.torosamy.torosamyItem.listener.UpdateItemListener
+import net.torosamy.torosamyItem.listener.*
 
 class ListenerUtil {
     companion object{

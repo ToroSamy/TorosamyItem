@@ -1,26 +1,64 @@
 package net.torosamy.torosamyItem.pojo
 
-class CustomItem {
-    //物品基础配置
-    var displayName: String? = null
-    var material: String? = null
-    var lore: List<String>? = null
-    var unbreakable: Boolean? = null
-    var enchantList: List<String>? = null
-    var itemFlagList: List<String>? = null
-    var clearAttribute: Boolean? = null
-    var color: String? = null
+import net.torosamy.torosamyCore.api.TorosamyCoreAPI
+import net.torosamy.torosamyCore.utils.NbtUtil
+import net.torosamy.torosamyItem.api.TorosamyItemAPI
+import org.bukkit.configuration.ConfigurationSection
+import org.bukkit.inventory.ItemStack
 
-    //物品指令 <key,command>
-    var commands = HashMap<String, ItemCommand>()
+class CustomItem(config: ConfigurationSection, key: String) {
+    val itemStack: ItemStack
 
-    //物品更新
-    var update: Boolean? = null
-    var key: String? = null
-    var configString: String? = null
-    var hashCode: Int? = null
+    val catalogPage: Int
+    val catalogSlot: Int
+    val commands = HashMap<String, ItemCommand>()
+    
+    val update: Boolean
+    
+    val leftConsume: Boolean
+    val rightConsume: Boolean
+    
+    fun getHashCode(): Int {
+        return NbtUtil.getInteger(itemStack, TorosamyItemAPI.GET_TOROSAMY_HASH_CODE_KEY())
+    }
+    
+    fun getKey(): String {
+        return NbtUtil.getString(itemStack, TorosamyItemAPI.GET_TOROSAMY_ITEM_KEY())
+    }
+    
+    init {
+        this.itemStack = TorosamyCoreAPI.generateItem(config)
+        NbtUtil.setInteger(
+            itemStack, 
+            TorosamyItemAPI.GET_TOROSAMY_HASH_CODE_KEY(),
+            TorosamyCoreAPI.saveString(config).hashCode()
+        )
+        NbtUtil.setString(
+            itemStack, 
+            TorosamyItemAPI.GET_TOROSAMY_ITEM_KEY(),
+            key
+        )
+//        this.hashCode = TorosamyCoreAPI.saveString(config).hashCode()
+//
+//        this.key = key
 
-    //物品消耗
-    var leftConsume: Boolean = false
-    var rightConsume: Boolean = false
+        this.leftConsume = config.getBoolean("leftConsume", false)
+
+        this.rightConsume = config.getBoolean("rightConsume", false)
+
+        this.update = config.getBoolean("update", false)
+
+        this.commands.putAll(ItemCommand.generateCommandGroup(config.getConfigurationSection("commands")))
+
+        val location = config.getString("catalogLocation", "-1:-1")!!
+
+        val split = location.split(":")
+        if (split.size > 1) {
+            this.catalogPage = split[0].toIntOrNull() ?: -1
+            this.catalogSlot = split[1].toIntOrNull() ?: -1
+        }else {
+            this.catalogPage = -1
+            this.catalogSlot = -1
+        }
+    }
 }
