@@ -9,26 +9,32 @@ import org.incendo.cloud.annotations.Argument
 import org.incendo.cloud.annotations.Command
 import org.incendo.cloud.annotations.CommandDescription
 import org.incendo.cloud.annotations.Permission
+import org.incendo.cloud.annotations.suggestion.Suggestions
+import org.incendo.cloud.context.CommandContext
+import org.incendo.cloud.context.CommandInput
 
 class PlayerCommands {
-    @Command("catalog <page>", requiredSender = Player::class)
-    @Permission("torosamyitem.view")
+    @Command("ti catalog <catalog>")
+    @Permission("torosamyitem.catalog")
     @CommandDescription("打开图鉴")
-    fun catalogPage(sender: CommandSender, @Argument("page") page: Int) {
-        val player = sender as Player
+    fun catalogPage(player: Player, @Argument(value = "catalog", suggestions = "catalog") catalogName: String) {
+        val catalogInventory = TorosamyItemAPI.getCatalog(catalogName)
 
-        if (page < 1) {
-            player.sendMessage(MessageUtil.format(ConfigUtil.langConfig.pageError))
-            return
-        }
-
-        val inventory = TorosamyItemAPI.getCatalog(page)
-        
-        if (inventory == null) {
+        if (catalogInventory == null) {
             player.sendMessage(MessageUtil.format(ConfigUtil.langConfig.pageError))
             return
         }
         
-        player.openInventory(inventory)
+        catalogInventory.open(player)
+    }
+    
+    @Suggestions("catalog")
+    fun catalogSuggest(context: CommandContext<CommandSender>, input: CommandInput): List<String> {
+        return TorosamyItemAPI.getCatalogNames()
+    }
+
+    @Suggestions("item")
+    fun itemSuggest(context: CommandContext<CommandSender>, input: CommandInput): List<String> {
+        return TorosamyItemAPI.getItemNames();
     }
 }

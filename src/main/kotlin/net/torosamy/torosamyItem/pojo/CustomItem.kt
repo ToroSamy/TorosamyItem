@@ -1,22 +1,41 @@
 package net.torosamy.torosamyItem.pojo
 
 import net.torosamy.torosamyCore.api.TorosamyCoreAPI
+import net.torosamy.torosamyCore.inventory.InventoryBlockerHolder
+import net.torosamy.torosamyCore.utils.MessageUtil
 import net.torosamy.torosamyCore.utils.NbtUtil
 import net.torosamy.torosamyItem.api.TorosamyItemAPI
+import net.torosamy.torosamyItem.pojo.command.sub.Consume
+import net.torosamy.torosamyItem.pojo.command.sub.Interact
+import net.torosamy.torosamyItem.pojo.command.sub.SlotCommand
+import net.torosamy.torosamyItem.pojo.command.sub.Timer
+import net.torosamy.torosamyItem.utils.ConfigUtil
+import org.bukkit.Bukkit
+import org.bukkit.Material
 import org.bukkit.configuration.ConfigurationSection
+import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
 class CustomItem(config: ConfigurationSection, key: String) {
     val itemStack: ItemStack
-
-    val catalogPage: Int
-    val catalogSlot: Int
-    val commands = HashMap<String, ItemCommand>()
     
     val update: Boolean
     
-    val leftConsume: Boolean
-    val rightConsume: Boolean
+    val interact: Boolean
+    
+    val disappear: ArrayList<String> = arrayListOf()
+    
+    val preventShoot: Boolean
+    
+    val consume: Consume
+    
+    val timer: Timer
+
+    val interactGroup = HashMap<String, Interact>()
+    
+    val attack: SlotCommand
+    
+    val defense: SlotCommand
     
     fun getHashCode(): Int {
         return NbtUtil.getInteger(itemStack, TorosamyItemAPI.GET_TOROSAMY_HASH_CODE_KEY())
@@ -38,27 +57,22 @@ class CustomItem(config: ConfigurationSection, key: String) {
             TorosamyItemAPI.GET_TOROSAMY_ITEM_KEY(),
             key
         )
-//        this.hashCode = TorosamyCoreAPI.saveString(config).hashCode()
-//
-//        this.key = key
-
-        this.leftConsume = config.getBoolean("leftConsume", false)
-
-        this.rightConsume = config.getBoolean("rightConsume", false)
+        this.preventShoot = config.getBoolean("preventShoot", this.itemStack.type == Material.CROSSBOW)
 
         this.update = config.getBoolean("update", false)
 
-        this.commands.putAll(ItemCommand.generateCommandGroup(config.getConfigurationSection("commands")))
+        this.interact = config.getBoolean("interact", false)
+        
+        this.disappear.addAll(config.getStringList("disappear"))
+        
+        this.consume = Consume(config.getConfigurationSection("consume"))
+        
+        this.timer = Timer(config.getConfigurationSection("timer"))
 
-        val location = config.getString("catalogLocation", "-1:-1")!!
-
-        val split = location.split(":")
-        if (split.size > 1) {
-            this.catalogPage = split[0].toIntOrNull() ?: -1
-            this.catalogSlot = split[1].toIntOrNull() ?: -1
-        }else {
-            this.catalogPage = -1
-            this.catalogSlot = -1
-        }
+        this.interactGroup.putAll(Interact.generateCommandGroup(config.getConfigurationSection("commands")))
+        
+        this.attack = SlotCommand(config.getConfigurationSection("attack"))
+        
+        this.defense = SlotCommand(config.getConfigurationSection("defense"))
     }
 }

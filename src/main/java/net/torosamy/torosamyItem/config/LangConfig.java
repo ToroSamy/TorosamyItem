@@ -11,4 +11,6 @@ public class LangConfig implements IConfigManage {
     public String loadItemsMessage;
     public String customNotFound;
     public String giveSuccessful;
+    public String playerNotFound;
+    public String removeItem;
 }

@@ -26,40 +26,22 @@ black-container:
   - WORKBENCH
 # - BARREL # 木桶，有27个集装箱类型的槽。
 
+remove-unload-item: true
+
 catalog-default-item:
   display: "&e装饰线"
   material: GRAY_STAINED_GLASS_PANE
-  lore: []
+  lore:
+    - "&6&m                     "
+    - "&e&l ▪ 左键查看更新日志"
+    - "&e&l ▪ 右键查看活动内容"
+    - "&6&m                     "
   enchantment:
     - DURABILITY:1
   item-flag-list:
     - "HIDE_ATTRIBUTES"
     - "HIDE_ENCHANTS"
-  slots:
-    - 0
-    - 9
-    - 18
-    - 27
-    - 36
-    - 45
-    - 8
-    - 17
-    - 26
-    - 35
-    - 44
-    - 45
-    - 46
-    - 47
-    - 48
-    - 49
-    - 50
-    - 51
-    - 52
-    - 53
-    - 1
-    - 2
-    - 3
-    - 4
-    - 5
-    - 6
-    - 7
+  right-commands: 
+    - '[player] item-catalog'
+  left-commands:
+    - '[player] item-catalog'

@@ -1,18 +1,15 @@
 package net.torosamy.torosamyItem.commands
 
+import net.torosamy.torosamyCore.api.TorosamyCoreAPI
 import net.torosamy.torosamyCore.utils.MessageUtil
-import net.torosamy.torosamyCore.utils.NbtUtil
-import net.torosamy.torosamyItem.TorosamyItem
 import net.torosamy.torosamyItem.api.TorosamyItemAPI
 import net.torosamy.torosamyItem.utils.ConfigUtil
-import org.bukkit.Material
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
-import org.incendo.cloud.annotations.Argument
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.CommandDescription
-import org.incendo.cloud.annotations.Permission
+import org.incendo.cloud.annotations.*
+import org.incendo.cloud.annotations.suggestion.Suggestions
+import org.incendo.cloud.context.CommandContext
+import org.incendo.cloud.context.CommandInput
 
 
 class AdminCommands {
@@ -22,26 +19,54 @@ class AdminCommands {
     fun reloadConfig(sender: CommandSender) {
         ConfigUtil.reloadConfig()
         TorosamyItemAPI.loadItems()
-        TorosamyItemAPI.loadCatalogs()
         sender.sendMessage(MessageUtil.format(ConfigUtil.langConfig.reloadMessage))
     }
 
-
-    @Command("ti give <itemName> <player>")
+    @Command("ti drop <item> <player>")
     @Permission("torosamyitem.give")
     @CommandDescription("给予玩家自定义物品")
-    fun givePlayerItem(sender: CommandSender, @Argument("player") player: Player, @Argument("itemName") itemName: String) {
-        giveMoreItem(sender, player, itemName, 1)
+    fun dropItem(sender: CommandSender, @Argument("player") player: Player, @Argument(value = "item", suggestions = "item") itemName: String) {
+        val customItem = TorosamyItemAPI.getCustomItem(itemName)
+
+        if (customItem == null) {
+            sender.sendMessage(MessageUtil.format(player, ConfigUtil.langConfig.customNotFound))
+            return
+        }
+        val item = customItem.itemStack.clone()
+
+        player.world.dropItemNaturally(player.location, item)
     }
 
-    @Command("ti give <itemName> <player> <amount>")
+    @Command("ti set-hand <item> <player>")
+    @Permission("torosamyitem.give")
+    @CommandDescription("给予玩家自定义物品")
+    fun setPlayerHandItem(sender: CommandSender, @Argument("player") player: Player, @Argument(value = "item", suggestions = "item") itemName: String) {
+        val customItem = TorosamyItemAPI.getCustomItem(itemName)
+
+        if (customItem == null) {
+            sender.sendMessage(MessageUtil.format(player, ConfigUtil.langConfig.customNotFound))
+            return
+        }
+        val item = customItem.itemStack.clone()
+        
+        player.inventory.setItemInMainHand(item)
+    }
+
+    @Command("ti give <item> <player>")
+    @Permission("torosamyitem.give")
+    @CommandDescription("给予玩家自定义物品")
+    fun givePlayerItem(sender: CommandSender, @Argument("player") player: Player, @Argument(value = "item", suggestions = "item") itemName: String) {
+        giveMoreItem(sender, player, itemName, 1, true)
+    }
+
+    @Command("ti give <item> <player> <amount> [messaged]")
     @Permission("torosamyitem.give")
     @CommandDescription("给予指定数量的自定义物品")
-    fun giveMoreItem(sender: CommandSender, @Argument("player") player: Player, @Argument("itemName") itemName: String, @Argument("amount") amount: Int) {
+    fun giveMoreItem(sender: CommandSender, @Argument("player") player: Player, @Argument(value = "item", suggestions = "item") itemName: String, @Argument("amount") amount: Int, @Argument("messaged")@Default("true") messaged: Boolean) {
         if (player.inventory.firstEmpty() == -1) {
             sender.sendMessage(MessageUtil.format(player, ConfigUtil.langConfig.packageOverflow))
 
-            if (player.name.equals(sender.name)) {
+            if (player.name != sender.name) {
                 player.sendMessage(MessageUtil.format(player, ConfigUtil.langConfig.packageOverflow))
             }
         }
@@ -55,46 +80,40 @@ class AdminCommands {
         item.amount = amount
         player.inventory.addItem(item)
         
+        if (!messaged) {
+            return
+        }
+        
         val message: String = MessageUtil.format(player, ConfigUtil.langConfig.giveSuccessful.replace("%item%", itemName))
         
         sender.sendMessage(message)
     }
 
 
-    @Command("ti give <itemName>", requiredSender = Player::class)
+    @Command("ti give <item>")
     @Permission("torosamyitem.give")
     @CommandDescription("给予自己自定义物品")
-    fun giveSelfItem(sender: CommandSender, @Argument("itemName") itemName: String) {
-        giveMoreItem(sender, sender as Player, itemName, 1)
+    fun giveSelfItem(sender: Player, @Argument(value = "item", suggestions = "item") itemName: String) {
+        giveMoreItem(sender, sender, itemName, 1, true)
     }
+    
+    
 
-    @Command("ti nbt <itemName>")
-    @Permission("torosamyitem.nbt")
-    @CommandDescription("显示CustomItem的NBT")
-    fun showItemNBT(sender: CommandSender, @Argument("itemName") itemName: String) {
-        val customItem = TorosamyItemAPI.getCustomItem(itemName) ?: return
-
-        val item = customItem.itemStack
-
-        sender.sendMessage("HashCode: " + TorosamyItemAPI.getHashCode(item))
-        sender.sendMessage("TorosamyItem: "+ TorosamyItemAPI.getItemKey(item))
-    }
-
-    @Command("ti nbt", requiredSender = Player::class)
-    @Permission("torosamyitem.nbt")
-    @CommandDescription("显示手上物品的NBT")
-    fun showHandNBT(sender: CommandSender) {
-        val player = sender as Player
+    @Command(value = "ti animation <player>")
+    @Permission("torosamyitem.animation")
+    @CommandDescription("播放玩家的装备动画")
+    fun animation(sender: CommandSender, @Argument("player") player: Player) {
+        val equipment = player.equipment ?: return
         
-        val itemInMainHand: ItemStack = player.inventory.itemInMainHand
-        
-        if (itemInMainHand.type == Material.AIR) {
-            return
+        if (TorosamyItemAPI.canPlayAnimation(equipment.itemInMainHand) ||
+            TorosamyItemAPI.canPlayAnimation(equipment.itemInOffHand)) {
+            TorosamyCoreAPI.playAnimation(player)
         }
-
-        sender.sendMessage("HashCode: " + TorosamyItemAPI.getHashCode(itemInMainHand))
-        sender.sendMessage("TorosamyItem: "+ TorosamyItemAPI.getItemKey(itemInMainHand))
-
     }
-
+    
+    
+    @Suggestions("item")
+    fun suggestBoxes(context: CommandContext<CommandSender>, input: CommandInput): List<String> {
+        return TorosamyItemAPI.getItemNames();
+    }
 }
