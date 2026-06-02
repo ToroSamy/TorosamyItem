@@ -1,16 +1,19 @@
 package net.torosamy.torosamyItem.commands
 
-import net.torosamy.torosamyCore.item.TrimData
+import net.torosamy.torosamyCore.item.meta.TrimData
 import net.torosamy.torosamyCore.utils.MessageUtil
 import net.torosamy.torosamyCore.utils.NbtUtil
 import net.torosamy.torosamyItem.api.TorosamyItemAPI
 import net.torosamy.torosamyItem.utils.ConfigUtil
 import org.bukkit.Material
 import org.bukkit.command.CommandSender
+import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.incendo.cloud.annotations.Argument
 import org.incendo.cloud.annotations.Command
+import net.torosamy.torosamyCore.config.ConfigUtil.MAIN_CONFIG
+import net.torosamy.torosamyCore.item.data.ToolData
 import org.incendo.cloud.annotations.CommandDescription
 import org.incendo.cloud.annotations.Permission
 
@@ -52,6 +55,28 @@ class SetCommands {
         NbtUtil.setInteger(itemInMainHand, key, value)
     }
 
+    @Command(value = "ti set tool <player> <rules>")
+    @Permission("torosamyitem.set.tool")
+    @CommandDescription("给手上物品设置工具属性")
+    fun setTool(sender: CommandSender, @Argument("player") player: Player, @Argument("rules") rulesInput: String) {
+        if (!player.isOnline) {
+            sender.sendMessage(MessageUtil.format(ConfigUtil.langConfig.playerNotFound))
+            return
+        }
+
+        val item = player.inventory.itemInMainHand
+        if (item.type.isAir) {
+            return
+        }
+        
+        val rules = rulesInput.split(",").toList()
+        
+        val config = YamlConfiguration()
+
+        config.set(MAIN_CONFIG.itemAttributeKeys.tool, rules)
+        
+        ToolData.getInstance().setItem(item, config)
+    }
 
     @Command(value = "ti custom-model-data <player> <value>")
     @Permission("torosamyitem.custom-model-data")

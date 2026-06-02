@@ -56,7 +56,7 @@ class UpdateItemListener : Listener {
             return
         }
         
-        val newItem = customItem.itemStack
+        val newItem = customItem.getItem()
         
         oldItem.type = newItem.type
         oldItem.itemMeta = newItem.itemMeta

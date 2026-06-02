@@ -1,23 +1,19 @@
 package net.torosamy.torosamyItem.pojo
 
 import net.torosamy.torosamyCore.api.TorosamyCoreAPI
-import net.torosamy.torosamyCore.inventory.InventoryBlockerHolder
-import net.torosamy.torosamyCore.utils.MessageUtil
 import net.torosamy.torosamyCore.utils.NbtUtil
 import net.torosamy.torosamyItem.api.TorosamyItemAPI
 import net.torosamy.torosamyItem.pojo.command.sub.Consume
 import net.torosamy.torosamyItem.pojo.command.sub.Interact
 import net.torosamy.torosamyItem.pojo.command.sub.SlotCommand
 import net.torosamy.torosamyItem.pojo.command.sub.Timer
-import net.torosamy.torosamyItem.utils.ConfigUtil
-import org.bukkit.Bukkit
+import net.torosamy.torosamyItem.pojo.crop.Crop
 import org.bukkit.Material
 import org.bukkit.configuration.ConfigurationSection
-import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
 class CustomItem(config: ConfigurationSection, key: String) {
-    val itemStack: ItemStack
+    private val itemStack: ItemStack
     
     val update: Boolean
     
@@ -37,12 +33,20 @@ class CustomItem(config: ConfigurationSection, key: String) {
     
     val defense: SlotCommand
     
+    val isBlock: Boolean
+    
+    val crop: Crop
+    
     fun getHashCode(): Int {
         return NbtUtil.getInteger(itemStack, TorosamyItemAPI.GET_TOROSAMY_HASH_CODE_KEY())
     }
     
     fun getKey(): String {
         return NbtUtil.getString(itemStack, TorosamyItemAPI.GET_TOROSAMY_ITEM_KEY())
+    }
+    
+    fun getItem(): ItemStack {
+        return itemStack.clone()
     }
     
     init {
@@ -59,11 +63,15 @@ class CustomItem(config: ConfigurationSection, key: String) {
         )
         this.preventShoot = config.getBoolean("preventShoot", this.itemStack.type == Material.CROSSBOW)
 
-        this.update = config.getBoolean("update", false)
+        this.update = config.getBoolean("update", true)
 
         this.interact = config.getBoolean("interact", false)
         
         this.disappear.addAll(config.getStringList("disappear"))
+        
+        this.isBlock = config.getBoolean("isBlock", false)
+        
+        this.crop = Crop(config.getConfigurationSection("crop"))
         
         this.consume = Consume(config.getConfigurationSection("consume"))
         

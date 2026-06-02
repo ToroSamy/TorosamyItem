@@ -49,7 +49,7 @@ class AttackDefenseListener : Listener {
             holders["%defenser%"] = event.entity.name
             holders["%attacker%"] = event.damager.name
             
-            customItem.attack.runCommands(player, slot)
+            customItem.attack.runCommands(player, slot, holders)
         }
     }
 }

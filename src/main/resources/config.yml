@@ -27,6 +27,11 @@ black-container:
 # - BARREL # 木桶，有27个集装箱类型的槽。
 
 remove-unload-item: true
+#remove-unknown-custom-item: true
+  
+resource-pack-url: "https://www.bitlie.net/BitLie.zip"
+resource-pack-sha: "47c13982d45c5264c1705cef974b5704010313c7"
+resource-pack-uuid: "d6e16dcf-3f21-3a5f-83f7-c3fd8da45da6"
 
 catalog-default-item:
   display: "&e装饰线"

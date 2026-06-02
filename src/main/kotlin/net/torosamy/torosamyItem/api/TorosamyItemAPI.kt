@@ -1,24 +1,33 @@
 package net.torosamy.torosamyItem.api
 
 import io.papermc.paper.datacomponent.DataComponentTypes
+import net.kyori.adventure.resource.ResourcePackInfo
+import net.kyori.adventure.resource.ResourcePackRequest
+import net.kyori.adventure.text.Component
 import net.torosamy.torosamyCore.api.TorosamyCoreAPI
 import net.torosamy.torosamyCore.config.ConfigFile
 import net.torosamy.torosamyCore.utils.MessageUtil
 import net.torosamy.torosamyCore.utils.NbtUtil
 import net.torosamy.torosamyItem.TorosamyItem
-import net.torosamy.torosamyItem.pojo.CatalogInventory
-import net.torosamy.torosamyItem.pojo.CatalogInventoryHolder
+import net.torosamy.torosamyItem.pojo.catalog.CatalogInventory
+import net.torosamy.torosamyItem.pojo.catalog.CatalogMenuHolder
 import net.torosamy.torosamyItem.pojo.CustomItem
 import net.torosamy.torosamyItem.utils.ConfigUtil
-import org.bukkit.Bukkit
+import org.bukkit.*
 import org.bukkit.configuration.ConfigurationSection
+import org.bukkit.entity.Interaction
+import org.bukkit.entity.Player
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
+import org.bukkit.persistence.PersistentDataType
+import java.net.URI
+import java.util.*
+import kotlin.collections.HashMap
 
 object TorosamyItemAPI {
     private val items = HashMap<String, CustomItem>()
 
-    private val CATALOG_DEFAULT_ITEM: ItemStack = loadCatalogDefaultItem()
+    private var CATALOG_DEFAULT_ITEM: ItemStack = loadCatalogDefaultItem()
 
     private val catalogs: HashMap<String, CatalogInventory> = HashMap()
 
@@ -26,8 +35,8 @@ object TorosamyItemAPI {
 
     private const val TOROSAMY_HASH_CODE_KEY: String = "HashCode"
     
-//    private var BIND_ENABLE = false
-    
+    private const val TOROSAMY_BLOCK_KEY: String = "TorosamyFurniture"
+
     public val EQUIPMENT_SLOTS = listOf(
         EquipmentSlot.HEAD, 
         EquipmentSlot.CHEST,
@@ -48,6 +57,10 @@ object TorosamyItemAPI {
     fun GET_TOROSAMY_ITEM_KEY(): String {
         return TOROSAMY_ITEM_KEY
     }
+    
+    fun GET_TOROSAMY_BLOCK_KEY(): String {
+        return TOROSAMY_BLOCK_KEY
+    }
 
     fun GET_TOROSAMY_HASH_CODE_KEY(): String {
         return TOROSAMY_HASH_CODE_KEY
@@ -59,6 +72,22 @@ object TorosamyItemAPI {
 
     fun getCatalogNames(): List<String> {
         return catalogs.keys.toList()
+    }
+    
+    fun updatePlayerResourcePack(player: Player) {
+        val packInfo = ResourcePackInfo.resourcePackInfo(
+            UUID.fromString(ConfigUtil.mainConfig.resourcePackUuid),
+            URI.create(ConfigUtil.mainConfig.resourcePackUrl),
+            ConfigUtil.mainConfig.resourcePackSha
+        )
+
+        val request = ResourcePackRequest.resourcePackRequest()
+            .packs(packInfo)
+            .required(true)
+            .prompt(Component.text(ConfigUtil.langConfig.resourcePack))
+            .build()
+
+        player.sendResourcePacks(request)
     }
 
 
@@ -76,9 +105,16 @@ object TorosamyItemAPI {
         }
         val customItem = getCustomItem(getItemKey(item)) ?: return false
 
-        return customItem.itemStack.hasData(DataComponentTypes.DEATH_PROTECTION)
+        return customItem.getItem().hasData(DataComponentTypes.DEATH_PROTECTION)
     }
     
+    fun getCustomItem(itemStack: ItemStack): CustomItem? {
+        if (!isTorosamyItem(itemStack)) {
+            return null
+        }
+        
+        return getCustomItem(getItemKey(itemStack))
+    }
 
     fun getItemKey(itemStack: ItemStack): String {
         return NbtUtil.getString(itemStack, TOROSAMY_ITEM_KEY);
@@ -88,14 +124,14 @@ object TorosamyItemAPI {
         val itemKey: String? = NbtUtil.getString(itemStack, TOROSAMY_ITEM_KEY)
         return itemKey != null
     }
-
+    
     public fun getCatalog(catalogName: String): CatalogInventory? {
         return catalogs[catalogName]
     }
 
 
     private fun generateEmptyCatalog(catalogName: String): CatalogInventory {
-        val displayInv = Bukkit.createInventory(CatalogInventoryHolder(catalogName), 54, MessageUtil.format(ConfigUtil.langConfig.catalogTitle))
+        val displayInv = Bukkit.createInventory(CatalogMenuHolder(catalogName), 54, MessageUtil.format(ConfigUtil.langConfig.catalogTitle))
 
         for (i in 0 until 54) {
             if (CATALOG_DEFAULT_ITEM.type.isItem) {
@@ -142,8 +178,8 @@ object TorosamyItemAPI {
 
         val inventory = catalogs[catalogName] ?: generateEmptyCatalog(catalogName)
 
-        val itemStack = customItem.itemStack.clone()
-
+        val itemStack = customItem.getItem()
+        
         if (itemStack.type.isItem) {
             inventory.addItem(
                 itemStack,
@@ -159,6 +195,7 @@ object TorosamyItemAPI {
     fun loadItems(){
         items.clear()
         catalogs.clear()
+        this.CATALOG_DEFAULT_ITEM = loadCatalogDefaultItem()
         TorosamyCoreAPI.getConfigs(TorosamyItem.plugin, listOf("Item")).values.forEach{
             for (itemName in it.getKeys(false)) {
                 val itemConfig = it.getConfigurationSection(itemName) ?: continue

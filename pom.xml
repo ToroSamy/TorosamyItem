@@ -4,27 +4,24 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>net.torosamy</groupId>
+    <parent>
+        <groupId>net.torosamy</groupId>
+        <artifactId>torosamy-minecraft-plugin</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    
     <artifactId>TorosamyItem</artifactId>
-    <version>2.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <version>${TorosamyItem.version}</version>
 
-    <name>TorosamyItem</name>
-
-    <properties>
-        <minecraft.version>1.21.1</minecraft.version>
-        <paper.api.version>${minecraft.version}-R0.1-SNAPSHOT</paper.api.version>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
     <build>
-        <plugins><plugin>
+        <plugins>
+            <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
                 <version>2.0.0</version>
-                <executions><execution>
+                <executions>
+                    <execution>
                         <id>compile</id>
                         <goals> <goal>compile</goal> </goals>
                         <phase>process-sources</phase>
@@ -34,38 +31,26 @@
                                 <sourceDir>${project.basedir}/src/main/java</sourceDir>
                             </sourceDirs>
                         </configuration>
-                </execution></executions>
-        </plugin></plugins>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 
-    <repositories>
-        <repository>
-            <id>papermc-repo</id>
-            <url>https://repo.papermc.io/repository/maven-public/</url>
-        </repository>
-        <repository>
-            <id>sonatype</id>
-            <url>https://oss.sonatype.org/content/groups/public/</url>
-        </repository>
-    </repositories>
+
 
     <dependencies>
         <dependency>
             <groupId>net.torosamy</groupId>
             <artifactId>TorosamyCore</artifactId>
-            <version>3.0-SNAPSHOT</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.21.8-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
-            <version>2.0.0</version>
         </dependency>
     </dependencies>
 </project>

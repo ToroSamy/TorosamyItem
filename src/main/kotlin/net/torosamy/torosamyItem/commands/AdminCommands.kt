@@ -4,6 +4,7 @@ import net.torosamy.torosamyCore.api.TorosamyCoreAPI
 import net.torosamy.torosamyCore.utils.MessageUtil
 import net.torosamy.torosamyItem.api.TorosamyItemAPI
 import net.torosamy.torosamyItem.utils.ConfigUtil
+import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.incendo.cloud.annotations.*
@@ -13,13 +14,22 @@ import org.incendo.cloud.context.CommandInput
 
 
 class AdminCommands {
-    @Command("ti reload")
+    @Command("ti reload [resourced]")
     @Permission("torosamyitem.reload")
     @CommandDescription("重载TorosamyItem配置文件")
-    fun reloadConfig(sender: CommandSender) {
+    fun reloadConfig(sender: CommandSender, @Argument("resourced")@Default("false") resourced: Boolean) {
         ConfigUtil.reloadConfig()
         TorosamyItemAPI.loadItems()
         sender.sendMessage(MessageUtil.format(ConfigUtil.langConfig.reloadMessage))
+        
+        if (!resourced) {
+            return
+        }
+
+        for (player in Bukkit.getOnlinePlayers()) {
+            TorosamyItemAPI.updatePlayerResourcePack(player)
+        }
+        
     }
 
     @Command("ti drop <item> <player>")
@@ -32,7 +42,7 @@ class AdminCommands {
             sender.sendMessage(MessageUtil.format(player, ConfigUtil.langConfig.customNotFound))
             return
         }
-        val item = customItem.itemStack.clone()
+        val item = customItem.getItem()
 
         player.world.dropItemNaturally(player.location, item)
     }
@@ -47,7 +57,7 @@ class AdminCommands {
             sender.sendMessage(MessageUtil.format(player, ConfigUtil.langConfig.customNotFound))
             return
         }
-        val item = customItem.itemStack.clone()
+        val item = customItem.getItem()
         
         player.inventory.setItemInMainHand(item)
     }
@@ -76,7 +86,7 @@ class AdminCommands {
             sender.sendMessage(MessageUtil.format(player, ConfigUtil.langConfig.customNotFound))
             return
         }
-        val item = customItem.itemStack.clone()
+        val item = customItem.getItem()
         item.amount = amount
         player.inventory.addItem(item)
         

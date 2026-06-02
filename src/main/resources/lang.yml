@@ -9,3 +9,4 @@ give-successful: "&b[服务器娘]&a成功将 &e%item%&a 添加到玩家 &e%play
 player-not-found: "&b[服务器娘]&c抱歉 未查询到对应的玩家"
 remove-item: "&b[服务器娘]&c玩家 &e%player_name%&c 物品 &e%item%&c 被强制销毁"
 amount-error: "&b[服务器娘]&c抱歉 您输入的数量有问题"
+resource-pack: "服务器材质包已更新，请点击接受以正常游玩"

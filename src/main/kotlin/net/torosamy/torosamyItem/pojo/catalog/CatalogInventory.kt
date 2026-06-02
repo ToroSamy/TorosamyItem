@@ -1,4 +1,4 @@
-package net.torosamy.torosamyItem.pojo
+package net.torosamy.torosamyItem.pojo.catalog
 
 import net.torosamy.torosamyCore.api.TorosamyCoreAPI
 import org.bukkit.entity.Player

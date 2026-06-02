@@ -8,6 +8,10 @@ public class MainConfig implements IConfigManage {
     public List<String> blackContainer;
     public String amountError;
     public Boolean removeUnloadItem;
+    public String resourcePackSha;
+    public String resourcePackUrl;
+    public String resourcePackUuid;
+//    public Boolean removeUnknownCustomItem;
     
     public CatalogDefaultItem catalogDefaultItem = new CatalogDefaultItem();
     public class CatalogDefaultItem implements IConfigManage {

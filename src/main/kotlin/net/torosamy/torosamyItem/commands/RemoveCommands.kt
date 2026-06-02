@@ -1,5 +1,6 @@
 package net.torosamy.torosamyItem.commands
 
+import io.papermc.paper.datacomponent.DataComponentTypes
 import net.torosamy.torosamyCore.utils.MessageUtil
 import net.torosamy.torosamyItem.utils.ConfigUtil
 import org.bukkit.command.CommandSender
@@ -35,5 +36,24 @@ class RemoveCommands {
         
         meta.trim = null
         item.setItemMeta(meta)
+    }
+
+    @Command(value = "ti remove tool <player>")
+    @Permission("torosamyitem.remove.tool")
+    @CommandDescription("删除物品的工具挖掘属性 (DataComponent Tool)")
+    fun removeTool(sender: CommandSender, @Argument("player") player: Player) {
+        if (!player.isOnline) {
+            sender.sendMessage(MessageUtil.format(ConfigUtil.langConfig.playerNotFound))
+            return
+        }
+
+        val item = player.inventory.itemInMainHand
+        
+        if (item.type.isAir || !item.hasData(DataComponentTypes.TOOL)) {
+            return
+        }
+        
+        item.unsetData(DataComponentTypes.TOOL)
+        sender.sendMessage(MessageUtil.format("§a已成功移除该物品的工具挖掘属性。"))
     }
 }

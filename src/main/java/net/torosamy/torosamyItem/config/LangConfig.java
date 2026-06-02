@@ -9,6 +9,7 @@ public class LangConfig implements IConfigManage {
     public String catalogTitle;
     public String pageError;
     public String loadItemsMessage;
+    public String resourcePack;
     public String customNotFound;
     public String giveSuccessful;
     public String playerNotFound;
